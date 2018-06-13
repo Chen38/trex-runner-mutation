@@ -54,6 +54,11 @@ button:hover {
   text-align: center;
 }
 
+#shot-tip {
+  opacity: 0;
+  transition: opacity .3s;
+}
+
 .debugging-content {
   line-height: 1em;
   margin-bottom: 0;

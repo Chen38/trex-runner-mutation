@@ -5,10 +5,11 @@
  * @param {Object} spritePos Positioning within image sprite.
  * @constructor
  */
-function Trex(canvas, spritePos) {
+function Trex(canvas, spritePos, spriteTextPos, canvasWidth) {
   this.canvas = canvas;
   this.canvasCtx = canvas.getContext('2d');
   this.spritePos = spritePos;
+  this.spriteTextPos = spriteTextPos;
   this.xPos = 0;
   this.yPos = 0;
   // Position when on the ground.
@@ -30,10 +31,11 @@ function Trex(canvas, spritePos) {
   this.jumpCount = 0;
   this.jumpspotX = 0;
   // Shot status
-  this.isShot = false;
   this.bullets = [];
-  this.bulletsAccumulation = 0;
-  this.init();
+  this.bulletsAmounts = 0;
+  this.bulletAmountsX = 0;
+  this.bulletAmountsY = 8;
+  this.init(canvasWidth);
 };
 /**
  * T-rex player config.
@@ -52,7 +54,8 @@ Trex.config = {
   SPRITE_WIDTH: 262,
   START_X_POS: 50,
   WIDTH: 44,
-  WIDTH_DUCK: 59
+  WIDTH_DUCK: 59,
+  MAX_BULLETS_UNITS: 4
 };
 /**
  * Used in collision detection.
@@ -118,7 +121,7 @@ Trex.prototype = {
    * T-rex player initaliser.
    * Sets the t-rex to blink at random intervals.
    */
-  init: function() {
+  init: function(canvasWidth) {
     this.blinkDelay = this.setBlinkDelay();
     this.groundYPos = Runner.defaultDimensions.HEIGHT - this.config.HEIGHT -
       Runner.config.BOTTOM_PAD;
@@ -126,6 +129,15 @@ Trex.prototype = {
     this.minJumpHeight = this.groundYPos - this.config.MIN_JUMP_HEIGHT;
     this.draw(0, 0);
     this.update(0, Trex.status.WAITING);
+    this.calcXPos(canvasWidth);
+  },
+  /**
+   * Calculate the xPos in the canvas.
+   * @param {number} canvasWidth
+   */
+  calcXPos: function(canvasWidth) {
+    this.bulletAmountsX = canvasWidth - (DistanceMeter.dimensions.DEST_WIDTH *
+      (Trex.config.MAX_BULLETS_UNITS + 1));
   },
   /**
    * Setter for the jump velocity.
@@ -239,14 +251,13 @@ Trex.prototype = {
     }
   },
   /**
-   * Shot at the target
+   * Shot every obstacle.
    */
   shot: function() {
-    // if (this.bulletsAccumulation > 0) {
-    //   this.bulletsAccumulation--;
-    //   this.addNewBullet(this.canvasCtx);
-    // }
-    this.addNewBullet(this.canvasCtx);
+    if (this.bulletsAmounts > 0) {
+      this.bulletsAmounts--;
+      this.addNewBullet(this.canvasCtx);
+    }
   },
   /**
    * Add bullet objs.
@@ -254,6 +265,36 @@ Trex.prototype = {
   addNewBullet: function(ctx) {
     var newBullet = new Bullet(ctx);
     this.bullets.push(newBullet);
+  },
+  /**
+   * Draw the amounts of bullets.
+   */
+  drawBulletAmounts: function(digitPos, value) {
+    var sourceWidth = DistanceMeter.dimensions.WIDTH;
+    var sourceHeight = DistanceMeter.dimensions.HEIGHT;
+    var sourceX = DistanceMeter.dimensions.WIDTH * value;
+    var sourceY = 0;
+    var targetX = digitPos * DistanceMeter.dimensions.DEST_WIDTH;
+    var targetY = this.bulletAmountsY + DistanceMeter.dimensions.HEIGHT;
+    var targetWidth = DistanceMeter.dimensions.WIDTH;
+    var targetHeight = DistanceMeter.dimensions.HEIGHT;
+    // For high DPI we 2x source values.
+    if (IS_HIDPI) {
+      sourceWidth *= 2;
+      sourceHeight *= 2;
+      sourceX *= 2;
+    }
+    sourceX += this.spriteTextPos.x;
+    sourceY += this.spriteTextPos.y;
+    this.canvasCtx.save();
+    this.canvasCtx.translate(this.bulletAmountsX, this.bulletAmountsY);
+    this.canvasCtx.drawImage(Runner.imageSprite,
+                             sourceX, sourceY,
+                             sourceWidth, sourceHeight,
+                             targetX, targetY,
+                             targetWidth, targetHeight
+    );
+    this.canvasCtx.restore();
   },
   /**
    * Initialise a jump.
@@ -343,7 +384,6 @@ Trex.prototype = {
     this.speedDrop = false;
     this.jumpCount = 0;
     this.bullets = [];
-    // this.bulletsAccumulation = 0;
   }
 };
 

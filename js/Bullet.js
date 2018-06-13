@@ -22,7 +22,7 @@ Bullet.config = {
   OFFSET_LEFT: 3,
   OFFSET_TOP: 8,
   SPEED: 8,
-  SHOT_DELAY: 800
+  SHOT_DELAY: 500
 }
 
 Bullet.prototype = {
@@ -47,7 +47,7 @@ Bullet.prototype = {
         this.savedY = y + this.config.OFFSET_TOP;
         this.yPos = this.savedY;
       }
-      this.draw(this.xPos);
+      this.draw(this.xPos, this.yPos);
       this.xPos += this.config.SPEED;
       if (!this.isVisible()) {
         this.remove = true;
@@ -58,10 +58,10 @@ Bullet.prototype = {
    * Draw the bullet to a particular position.
    * @param {number} xPos
    */
-  draw: function(xPos) {
-    var x = xPos || this.savedX;
+  draw: function(x, y) {
+    var x = x || this.savedX;
     if (this.image) {
-      this.canvasCtx.drawImage(this.image, x, this.yPos, this.config.WIDTH, this.config.HEIGHT);
+      this.canvasCtx.drawImage(this.image, x, y, this.config.WIDTH, this.config.HEIGHT);
     }
   },
   /**

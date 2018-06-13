@@ -5,7 +5,7 @@
   "main": "index.html",
   "scripts": {
     "start": "gulp dev",
-    "build": "gulp build && gulp buildInject",
+    "build": "rimraf -- dist && gulp build && gulp buildInject",
     "deploy": "git subtree push --prefix=dist origin gh-pages"
   },
   "keywords": [
@@ -23,6 +23,7 @@
     "gulp-inject": "^4.3.2",
     "gulp-uglify": "^3.0.0",
     "pump": "^3.0.0",
+    "rimraf": "^2.6.2",
     "sort-stream": "^1.0.1"
   }
 }

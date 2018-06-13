@@ -12,6 +12,7 @@ function Runner(outerContainerId, opt_config) {
   }
   Runner.instance_ = this;
   this.outerContainerEl = document.querySelector(outerContainerId);
+  this.shotTip = document.getElementById('shot-tip');
   this.containerEl = null;
   this.snackbarEl = null;
   this.detailsButton = this.outerContainerEl.querySelector('#details-button');
@@ -44,8 +45,10 @@ function Runner(outerContainerId, opt_config) {
   // Images.
   this.images = {};
   this.imagesLoaded = 0;
-  this.isShoting = false;
   this.canIncreaseBulletOnce = true;
+  this.defaultBulletAmountString = '';
+  this.bulletDigits = [];
+  this.timer = null;
 
   //if (this.isDisabled()) {
   //  this.setupDisabledRunner();
@@ -380,7 +383,7 @@ Runner.prototype = {
     // Distance meter
     this.distanceMeter = new DistanceMeter(this.canvas, this.spriteDef.TEXT_SPRITE, this.dimensions.WIDTH);
     // Draw t-rex
-    this.tRex = new Trex(this.canvas, this.spriteDef.TREX);
+    this.tRex = new Trex(this.canvas, this.spriteDef.TREX, this.spriteDef.TEXT_SPRITE, this.dimensions.WIDTH);
     this.outerContainerEl.appendChild(this.containerEl);
     if (IS_MOBILE) {
       this.createTouchController();
@@ -389,7 +392,13 @@ Runner.prototype = {
     this.update();
     window.addEventListener(Runner.events.RESIZE,
       this.debounceResize.bind(this));
+
     this.shotAction = throttle(this.tRex.shot, Bullet.config.SHOT_DELAY);
+
+    for (var i = 0; i < Trex.config.MAX_BULLETS_UNITS; i++) {
+      this.tRex.drawBulletAmounts(i, 0);
+      this.defaultBulletAmountString += '0';
+    }
   },
   /**
    * Create the touch controller. A div that covers whole screen.
@@ -535,7 +544,9 @@ Runner.prototype = {
       }
 
       // Update bullets
-      this.updateBullets(this.tRex.xPos, this.tRex.yPos);
+      if (this.started) {
+        this.updateBullets(this.tRex.xPos, this.tRex.yPos, this.tRex.ducking);
+      }
 
       // Check for collisions.
       var collision = hasObstacles && checkForCollision(this.horizon.obstacles[0], this.tRex);
@@ -557,30 +568,48 @@ Runner.prototype = {
       var playAchievementSound = this.distanceMeter.update(deltaTime, Math.ceil(this.distanceRan));
       if (playAchievementSound) {
         this.playSound(this.soundFx.SCORE);
-        if (this.canIncreaseBulletOnce) {
-          this.tRex.bulletsAccumulation++;
+      }
+
+      if (this.distanceMeter.acheivement && this.canIncreaseBulletOnce) {
+          this.tRex.bulletsAmounts++;
           this.canIncreaseBulletOnce = false;
-        }
-      }
-      // Night mode.
-      if (this.invertTimer > this.config.INVERT_FADE_DURATION) {
-        this.invertTimer = 0;
-        this.invertTrigger = false;
-        this.invert();
-      }
-      else if (this.invertTimer) {
-        this.invertTimer += deltaTime;
-      }
-      else {
-        var actualDistance = this.distanceMeter.getActualDistance(Math.ceil(this.distanceRan));
-        if (actualDistance > 0) {
-          this.invertTrigger = !(actualDistance % this.config.INVERT_DISTANCE);
-          if (this.invertTrigger && this.invertTimer === 0) {
-            this.invertTimer += deltaTime;
-            this.invert();
+          if (this.shotTip) {
+            this.shotTip.style.opacity = 1;
           }
-        }
+
+          if (!this.timer) {
+            this.timer = setTimeout(function() {
+              this.canIncreaseBulletOnce = true;
+              this.shotTip = null;
+              clearTimeout(this.timer);
+              this.timer = null;
+            }.bind(this), 1000 / 60 * 8);
+          }
       }
+
+      this.bulletDigits = (this.defaultBulletAmountString + this.tRex.bulletsAmounts).substr(-Trex.config.MAX_BULLETS_UNITS).split('');
+
+      for (var i = 0; i < Trex.config.MAX_BULLETS_UNITS; i++) {
+        this.tRex.drawBulletAmounts(i, this.bulletDigits[i]);
+      }
+
+      // Night mode.
+      // if (this.invertTimer > this.config.INVERT_FADE_DURATION) {
+      //   this.invertTimer = 0;
+      //   this.invertTrigger = false;
+      //   this.invert();
+      // } else if (this.invertTimer) {
+      //   this.invertTimer += deltaTime;
+      // } else {
+      //   var actualDistance = this.distanceMeter.getActualDistance(Math.ceil(this.distanceRan));
+      //   if (actualDistance > 0) {
+      //     this.invertTrigger = !(actualDistance % this.config.INVERT_DISTANCE);
+      //     if (this.invertTrigger && this.invertTimer === 0) {
+      //       this.invertTimer += deltaTime;
+      //       this.invert();
+      //     }
+      //   }
+      // }
     }
     if (!this.crashed) {
       this.tRex.update(deltaTime);
@@ -590,7 +619,10 @@ Runner.prototype = {
   /**
    * Update bullets
    */
-  updateBullets: function(x, y) {
+  updateBullets: function(x, y, isDucking) {
+    if (isDucking) {
+      y += (this.tRex.config.HEIGHT - this.tRex.config.HEIGHT_DUCK - Bullet.config.OFFSET_TOP);
+    }
     var bullets = this.tRex.bullets.slice(0);
     for (var i = 0; i < bullets.length; i++) {
       bullets[i].update(x, y);
@@ -823,7 +855,7 @@ Runner.prototype = {
       this.distanceMeter.reset(this.highestScore);
       this.horizon.reset();
       this.tRex.reset();
-      this.tRex.bulletsAccumulation = 0;
+      this.tRex.bulletsAmounts = 0;
       this.playSound(this.soundFx.BUTTON_PRESS);
       this.invert(true);
       this.update();

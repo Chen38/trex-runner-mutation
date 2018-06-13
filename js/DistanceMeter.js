@@ -71,8 +71,6 @@ DistanceMeter.prototype = {
       this.defaultString += '0';
       maxDistanceStr += '9';
     }
-    // I changed the max socre length to 8
-    maxDistanceStr = '99999999';
     this.maxScore = parseInt(maxDistanceStr);
   },
   /**
@@ -111,8 +109,7 @@ DistanceMeter.prototype = {
       // Left of the current score.
       var highScoreX = this.x - (this.maxScoreUnits * 2) * DistanceMeter.dimensions.WIDTH;
       this.canvasCtx.translate(highScoreX, this.y);
-    }
-    else {
+    } else {
       this.canvasCtx.translate(this.x, this.y);
     }
     this.canvasCtx.drawImage(this.image, sourceX, sourceY,
