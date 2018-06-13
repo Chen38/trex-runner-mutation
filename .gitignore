@@ -1,0 +1,18 @@
+# editor
+.idea/
+.vscode/
+
+# npm
+node_modules/
+npm-debug.*
+
+# build
+dist/
+
+# system
+_MACOSX/
+*.DS_Store
+._*
+
+# log
+*.log
