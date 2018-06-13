@@ -6,9 +6,6 @@
 node_modules/
 npm-debug.*
 
-# build
-dist/
-
 # system
 _MACOSX/
 *.DS_Store
