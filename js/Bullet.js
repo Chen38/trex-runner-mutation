@@ -1,6 +1,6 @@
 //******************************************************************************
 /**
- * Bullet shoting when game in kaigua mode.
+ * Bullet shooting when game in kaigua mode.
  */
 function Bullet(canvasCtx) {
   this.canvasCtx = canvasCtx;

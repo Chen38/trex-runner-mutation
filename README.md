@@ -1,6 +1,6 @@
 ## tRex runner game from Google Chrome offline egg
 
-Added shot action based on the original one.
+Added shoot action based on the original one.
 
 You can see the online [demo](https://chen38.github.io/trex-runner-mutation/).
 
@@ -8,9 +8,9 @@ You can see the online [demo](https://chen38.github.io/trex-runner-mutation/).
 
 - Basic is same
 - Run 100 distance get one bullet
-- Mutiple trees' obstacle needs mutiple bullets
+- Multiple trees' obstacle needs multiple bullets
 - Bullets amounts show below the current score
 
-And don't forget to type `s` to shot!
+And don't forget to type `s` to shoot!
 
 Have fun!

@@ -12,7 +12,7 @@ function Runner(outerContainerId, opt_config) {
   }
   Runner.instance_ = this;
   this.outerContainerEl = document.querySelector(outerContainerId);
-  this.shotTip = document.getElementById('shot-tip');
+  this.shootTip = document.getElementById('shoot-tip');
   this.containerEl = null;
   this.snackbarEl = null;
   this.detailsButton = this.outerContainerEl.querySelector('#details-button');
@@ -46,8 +46,6 @@ function Runner(outerContainerId, opt_config) {
   this.images = {};
   this.imagesLoaded = 0;
   this.canIncreaseBulletOnce = true;
-  this.defaultBulletAmountString = '';
-  this.bulletDigits = [];
   this.timer = null;
 
   //if (this.isDisabled()) {
@@ -393,12 +391,7 @@ Runner.prototype = {
     window.addEventListener(Runner.events.RESIZE,
       this.debounceResize.bind(this));
 
-    this.shotAction = throttle(this.tRex.shot, Bullet.config.SHOT_DELAY);
-
-    for (var i = 0; i < Trex.config.MAX_BULLETS_UNITS; i++) {
-      this.tRex.drawBulletAmounts(i, 0);
-      this.defaultBulletAmountString += '0';
-    }
+    this.shootAction = throttle(this.tRex.shoot, Bullet.config.SHOT_DELAY);
   },
   /**
    * Create the touch controller. A div that covers whole screen.
@@ -430,14 +423,16 @@ Runner.prototype = {
       this.canvas.height = this.dimensions.HEIGHT;
       Runner.updateCanvasScaling(this.canvas);
       this.distanceMeter.calcXPos(this.dimensions.WIDTH);
+      this.tRex.calcXPos(this.dimensions.WIDTH);
       this.clearCanvas();
       this.horizon.update(0, 0, true);
       this.tRex.update(0);
+      this.tRex.updateBullets();
+      this.distanceMeter.update(0, Math.ceil(this.distanceRan));
       // Outer container and distance meter.
       if (this.activated || this.crashed || this.paused) {
         this.containerEl.style.width = this.dimensions.WIDTH + 'px';
         this.containerEl.style.height = this.dimensions.HEIGHT + 'px';
-        this.distanceMeter.update(0, Math.ceil(this.distanceRan));
         this.stop();
       }
       else {
@@ -573,25 +568,21 @@ Runner.prototype = {
       if (this.distanceMeter.acheivement && this.canIncreaseBulletOnce) {
           this.tRex.bulletsAmounts++;
           this.canIncreaseBulletOnce = false;
-          if (this.shotTip) {
-            this.shotTip.style.opacity = 1;
+          if (this.shootTip) {
+            this.shootTip.style.opacity = 1;
           }
 
           if (!this.timer) {
             this.timer = setTimeout(function() {
               this.canIncreaseBulletOnce = true;
-              this.shotTip = null;
+              this.shootTip = null;
               clearTimeout(this.timer);
               this.timer = null;
             }.bind(this), 1000 / 60 * 8);
           }
       }
 
-      this.bulletDigits = (this.defaultBulletAmountString + this.tRex.bulletsAmounts).substr(-Trex.config.MAX_BULLETS_UNITS).split('');
-
-      for (var i = 0; i < Trex.config.MAX_BULLETS_UNITS; i++) {
-        this.tRex.drawBulletAmounts(i, this.bulletDigits[i]);
-      }
+      this.tRex.updateBullets();
 
       // Night mode.
       // if (this.invertTimer > this.config.INVERT_FADE_DURATION) {
@@ -709,7 +700,7 @@ Runner.prototype = {
         }
       }
       if (Runner.keycodes.SHOT[e.keyCode]) {
-        this.shotAction.call(this.tRex);
+        this.shootAction.call(this.tRex);
       }
       if (this.crashed && e.type == Runner.events.TOUCHSTART &&
           e.currentTarget == this.containerEl) {

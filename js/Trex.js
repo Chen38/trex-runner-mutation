@@ -35,6 +35,8 @@ function Trex(canvas, spritePos, spriteTextPos, canvasWidth) {
   this.bulletsAmounts = 0;
   this.bulletAmountsX = 0;
   this.bulletAmountsY = 8;
+  this.defaultBulletAmountString = '';
+  this.bulletDigits = [];
   this.init(canvasWidth);
 };
 /**
@@ -130,6 +132,11 @@ Trex.prototype = {
     this.draw(0, 0);
     this.update(0, Trex.status.WAITING);
     this.calcXPos(canvasWidth);
+
+    for (var i = 0; i < this.config.MAX_BULLETS_UNITS; i++) {
+      this.drawBulletAmounts(i, 0);
+      this.defaultBulletAmountString += '0';
+    }
   },
   /**
    * Calculate the xPos in the canvas.
@@ -172,8 +179,7 @@ Trex.prototype = {
     }
     if (this.status == Trex.status.WAITING) {
       this.blink(getTimeStamp());
-    }
-    else {
+    } else {
       this.draw(this.currentAnimFrames[this.currentFrame], 0);
     }
     // Update the frame position.
@@ -253,7 +259,7 @@ Trex.prototype = {
   /**
    * Shot every obstacle.
    */
-  shot: function() {
+  shoot: function() {
     if (this.bulletsAmounts > 0) {
       this.bulletsAmounts--;
       this.addNewBullet(this.canvasCtx);
@@ -265,6 +271,16 @@ Trex.prototype = {
   addNewBullet: function(ctx) {
     var newBullet = new Bullet(ctx);
     this.bullets.push(newBullet);
+  },
+  /**
+   * Update bullets amount
+   */
+  updateBullets: function() {
+    this.bulletDigits = (this.defaultBulletAmountString + this.bulletsAmounts).substr(-this.config.MAX_BULLETS_UNITS).split('');
+
+    for (var i = 0; i < this.config.MAX_BULLETS_UNITS; i++) {
+      this.drawBulletAmounts(i, this.bulletDigits[i]);
+    }
   },
   /**
    * Draw the amounts of bullets.
@@ -287,6 +303,7 @@ Trex.prototype = {
     sourceX += this.spriteTextPos.x;
     sourceY += this.spriteTextPos.y;
     this.canvasCtx.save();
+    this.canvasCtx.globalAlpha = .7;
     this.canvasCtx.translate(this.bulletAmountsX, this.bulletAmountsY);
     this.canvasCtx.drawImage(Runner.imageSprite,
                              sourceX, sourceY,
