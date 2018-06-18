@@ -221,8 +221,7 @@ Trex.prototype = {
         this.xPos, this.yPos,
         this.config.WIDTH_DUCK, this.config.HEIGHT);
 
-    }
-    else {
+    } else {
       // Crashed whilst ducking. Trex is standing up so needs adjustment.
       if (this.ducking && this.status == Trex.status.CRASHED) {
         this.xPos++;
@@ -306,10 +305,10 @@ Trex.prototype = {
     this.canvasCtx.globalAlpha = .7;
     this.canvasCtx.translate(this.bulletAmountsX, this.bulletAmountsY);
     this.canvasCtx.drawImage(Runner.imageSprite,
-                             sourceX, sourceY,
-                             sourceWidth, sourceHeight,
-                             targetX, targetY,
-                             targetWidth, targetHeight
+      sourceX, sourceY,
+      sourceWidth, sourceHeight,
+      targetX, targetY,
+      targetWidth, targetHeight
     );
     this.canvasCtx.restore();
   },
@@ -348,8 +347,7 @@ Trex.prototype = {
     if (this.speedDrop) {
       this.yPos += Math.round(this.jumpVelocity *
         this.config.SPEED_DROP_COEFFICIENT * framesElapsed);
-    }
-    else {
+    } else {
       this.yPos += Math.round(this.jumpVelocity * framesElapsed);
     }
     this.jumpVelocity += this.config.GRAVITY * framesElapsed;
@@ -382,8 +380,7 @@ Trex.prototype = {
     if (isDucking && this.status != Trex.status.DUCKING) {
       this.update(0, Trex.status.DUCKING);
       this.ducking = true;
-    }
-    else if (this.status == Trex.status.DUCKING) {
+    } else if (this.status == Trex.status.DUCKING) {
       this.update(0, Trex.status.RUNNING);
       this.ducking = false;
     }
@@ -403,4 +400,3 @@ Trex.prototype = {
     this.bullets = [];
   }
 };
-

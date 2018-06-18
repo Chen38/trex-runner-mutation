@@ -1,9 +1,6 @@
 const gulp = require('gulp');
 const pump = require('pump');
-const concat = require('gulp-concat');
-const uglify = require('gulp-uglify');
-const cleancss = require('gulp-cleancss');
-const inject = require('gulp-inject');
+const $ = require('gulp-load-plugins')();
 const bs = require('browser-sync');
 const sort = require('sort-stream');
 
@@ -27,7 +24,7 @@ gulp.task('devInject', () => {
     return 1;
   }));
 
-  target.pipe(inject(sortStream, {relative: true}))
+  target.pipe($.inject(sortStream, {relative: true}))
         .pipe(gulp.dest('./'));
 });
 
@@ -35,8 +32,8 @@ gulp.task('dev', ['refresh', 'devInject']);
 
 gulp.task('concatCSS', () => {
   gulp.src('./css/*.css')
-      .pipe(concat('runner.css'))
-      .pipe(cleancss())
+      .pipe($.concat('runner.css'))
+      .pipe($.cleancss())
       .pipe(gulp.dest('./dist'));
 });
 
@@ -48,8 +45,8 @@ gulp.task('concatJS', () => {
 
   pump([
     sortStream,
-    concat('runner.js'),
-    uglify().on('error', (err) => {
+    $.concat('runner.js'),
+    $.uglify().on('error', (err) => {
       console.log(err);
     }),
     gulp.dest('./dist')
@@ -60,7 +57,7 @@ gulp.task('build', ['concatCSS', 'concatJS']);
 
 gulp.task('buildInject', () => {
   gulp.src('./index.html')
-      .pipe(inject(gulp.src(['./dist/*.css', './dist/*.js'], {read: false}), {
+      .pipe($.inject(gulp.src(['./dist/*.css', './dist/*.js'], {read: false}), {
         relative: true,
         ignorePath: 'dist',
         addRootSlash: false

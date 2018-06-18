@@ -314,8 +314,7 @@ Runner.prototype = {
     if (IS_HIDPI) {
       Runner.imageSprite = document.getElementById('offline-resources-2x');
       this.spriteDef = Runner.spriteDefinition.HDPI;
-    }
-    else {
+    } else {
       Runner.imageSprite = document.getElementById('offline-resources-1x');
       this.spriteDef = Runner.spriteDefinition.LDPI;
     }
@@ -352,8 +351,7 @@ Runner.prototype = {
       var mobileSpeed = speed * this.dimensions.WIDTH / DEFAULT_WIDTH *
         this.config.MOBILE_SPEED_COEFFICIENT;
       this.currentSpeed = mobileSpeed > speed ? speed : mobileSpeed;
-    }
-    else if (opt_speed) {
+    } else if (opt_speed) {
       this.currentSpeed = opt_speed;
     }
   },
@@ -434,8 +432,7 @@ Runner.prototype = {
         this.containerEl.style.width = this.dimensions.WIDTH + 'px';
         this.containerEl.style.height = this.dimensions.HEIGHT + 'px';
         this.stop();
-      }
-      else {
+      } else {
         this.tRex.draw(0, 0);
       }
       // Game over panel.
@@ -531,8 +528,7 @@ Runner.prototype = {
       // The horizon doesn't move until the intro is over.
       if (this.playingIntro) {
         this.horizon.update(0, this.currentSpeed, hasObstacles);
-      }
-      else {
+      } else {
         deltaTime = !this.started ? 0 : deltaTime;
         this.horizon.update(deltaTime, this.currentSpeed, hasObstacles,
           this.inverted);
@@ -548,7 +544,7 @@ Runner.prototype = {
 
       var bulletCollsion = hasBullets && hasObstacles && checkBulletCollision(this.horizon.obstacles[0], this.tRex.bullets[0]);
 
-      if(bulletCollsion) {
+      if (bulletCollsion) {
         this.cleanBulletAndObstacle();
       }
 
@@ -566,20 +562,20 @@ Runner.prototype = {
       }
 
       if (this.distanceMeter.acheivement && this.canIncreaseBulletOnce) {
-          this.tRex.bulletsAmounts++;
-          this.canIncreaseBulletOnce = false;
-          if (this.shootTip) {
-            this.shootTip.style.opacity = 1;
-          }
+        this.tRex.bulletsAmounts++;
+        this.canIncreaseBulletOnce = false;
+        if (this.shootTip) {
+          this.shootTip.style.opacity = 1;
+        }
 
-          if (!this.timer) {
-            this.timer = setTimeout(function() {
-              this.canIncreaseBulletOnce = true;
-              this.shootTip = null;
-              clearTimeout(this.timer);
-              this.timer = null;
-            }.bind(this), 1000 / 60 * 8);
-          }
+        if (!this.timer) {
+          this.timer = setTimeout(function() {
+            this.canIncreaseBulletOnce = true;
+            this.shootTip = null;
+            clearTimeout(this.timer);
+            this.timer = null;
+          }.bind(this), 1000 / 60 * 8);
+        }
       }
 
       this.tRex.updateBullets();
@@ -654,8 +650,7 @@ Runner.prototype = {
       this.touchController.addEventListener(Runner.events.TOUCHSTART, this);
       this.touchController.addEventListener(Runner.events.TOUCHEND, this);
       this.containerEl.addEventListener(Runner.events.TOUCHSTART, this);
-    }
-    else {
+    } else {
       // Mouse.
       document.addEventListener(Runner.events.MOUSEDOWN, this);
       document.addEventListener(Runner.events.MOUSEUP, this);
@@ -671,8 +666,7 @@ Runner.prototype = {
       this.touchController.removeEventListener(Runner.events.TOUCHSTART, this);
       this.touchController.removeEventListener(Runner.events.TOUCHEND, this);
       this.containerEl.removeEventListener(Runner.events.TOUCHSTART, this);
-    }
-    else {
+    } else {
       document.removeEventListener(Runner.events.MOUSEDOWN, this);
       document.removeEventListener(Runner.events.MOUSEUP, this);
     }
@@ -688,7 +682,7 @@ Runner.prototype = {
     }
     if (e.target != this.detailsButton) {
       if (!this.crashed && (Runner.keycodes.JUMP[e.keyCode] ||
-                            e.type == Runner.events.TOUCHSTART)) {
+          e.type == Runner.events.TOUCHSTART)) {
         if (!this.activated) {
           this.loadSounds();
           this.activated = true;
@@ -703,7 +697,7 @@ Runner.prototype = {
         this.shootAction.call(this.tRex);
       }
       if (this.crashed && e.type == Runner.events.TOUCHSTART &&
-          e.currentTarget == this.containerEl) {
+        e.currentTarget == this.containerEl) {
         this.restart();
       }
     }
@@ -712,8 +706,7 @@ Runner.prototype = {
       if (this.tRex.jumping) {
         // Speed drop, activated only when jump key is not pressed.
         this.tRex.setSpeedDrop();
-      }
-      else if (!this.tRex.jumping && !this.tRex.ducking) {
+      } else if (!this.tRex.jumping && !this.tRex.ducking) {
         // Duck.
         this.tRex.setDuck(true);
       }
@@ -803,8 +796,7 @@ Runner.prototype = {
       this.gameOverPanel = new GameOverPanel(this.canvas,
         this.spriteDef.TEXT_SPRITE, this.spriteDef.RESTART,
         this.dimensions);
-    }
-    else {
+    } else {
       this.gameOverPanel.draw();
     }
     // Update the high score.
@@ -885,8 +877,7 @@ Runner.prototype = {
       document.body.classList.toggle(Runner.classes.INVERTED, false);
       this.invertTimer = 0;
       this.inverted = false;
-    }
-    else {
+    } else {
       this.inverted = document.body.classList.toggle(Runner.classes.INVERTED,
         this.invertTrigger);
     }
@@ -924,8 +915,7 @@ Runner.updateCanvasScaling = function(canvas, opt_width, opt_height) {
     // our canvas element.
     context.scale(ratio, ratio);
     return true;
-  }
-  else if (devicePixelRatio == 1) {
+  } else if (devicePixelRatio == 1) {
     // Reset the canvas width / height. Fixes scaling bug when the page is
     // zoomed and the devicePixelRatio changes accordingly.
     canvas.style.width = canvas.width + 'px';
@@ -933,4 +923,3 @@ Runner.updateCanvasScaling = function(canvas, opt_width, opt_height) {
   }
   return false;
 };
-

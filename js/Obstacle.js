@@ -54,8 +54,7 @@ Obstacle.MAX_OBSTACLE_LENGTH = 3,
       if (Array.isArray(this.typeConfig.yPos)) {
         var yPosConfig = IS_MOBILE ? this.typeConfig.yPosMobile : this.typeConfig.yPos;
         this.yPos = yPosConfig[getRandomNum(0, yPosConfig.length - 1)];
-      }
-      else {
+      } else {
         this.yPos = this.typeConfig.yPos;
       }
       this.draw();
@@ -68,8 +67,7 @@ Obstacle.MAX_OBSTACLE_LENGTH = 3,
       //   |_|___|_|   |_|_____|_|   |_|_______|_|
       //
       if (this.size > 1) {
-        this.collisionBoxes[1].width = this.width - this.collisionBoxes[0].width -
-          this.collisionBoxes[2].width;
+        this.collisionBoxes[1].width = this.width - this.collisionBoxes[0].width - this.collisionBoxes[2].width;
         this.collisionBoxes[2].x = this.width - this.collisionBoxes[2].width;
       }
       // For obstacles that go at a different speed from the horizon.
@@ -215,4 +213,3 @@ Obstacle.types = [{
   frameRate: 1000 / 6,
   speedOffset: .8
 }];
-

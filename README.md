@@ -1,12 +1,29 @@
-## tRex runner game from Google Chrome offline egg
+## tRex runner game from Google Chrome
 
 Added shoot action based on the original one.
 
-You can see the online [demo](https://chen38.github.io/trex-runner-mutation/).
+### Do some testing
+
+```bash
+# Clone this repo
+git clone https://github.com/Chen38/trex-runner-mutation.git
+
+# Install packages
+yarn install
+# or
+npm install
+
+# Start server
+yarn start
+# or
+npm start
+```
+
+Or you can play it [online][1] now.
 
 ### Rules
 
-- Basic is same
+- Basic is same(remove the night mode)
 - Run 100 distance get one bullet
 - Multiple trees' obstacle needs multiple bullets
 - Bullets amounts show below the current score
@@ -14,3 +31,7 @@ You can see the online [demo](https://chen38.github.io/trex-runner-mutation/).
 And don't forget to type `s` to shoot!
 
 Have fun!
+
+<!-- Links -->
+
+[1]: https://chen38.github.io/trex-runner-mutation/

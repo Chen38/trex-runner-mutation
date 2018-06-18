@@ -18,7 +18,7 @@ function Horizon(canvas, spritePos, dimensions, gapCoefficient) {
   this.horizonOffsets = [0, 0];
   this.cloudFrequency = this.config.CLOUD_FREQUENCY;
   this.spritePos = spritePos;
-  this.nightMode = null;
+  // this.nightMode = null;
   // Cloud
   this.clouds = [];
   this.cloudSpeed = this.config.BG_CLOUD_SPEED;
@@ -44,8 +44,7 @@ Horizon.prototype = {
   init: function() {
     this.addCloud();
     this.horizonLine = new HorizonLine(this.canvas, this.spritePos.HORIZON);
-    this.nightMode = new NightMode(this.canvas, this.spritePos.MOON,
-      this.dimensions.WIDTH);
+    // this.nightMode = new NightMode(this.canvas, this.spritePos.MOON, this.dimensions.WIDTH);
   },
   /**
    * @param {number} deltaTime
@@ -58,7 +57,7 @@ Horizon.prototype = {
   update: function(deltaTime, currentSpeed, updateObstacles, showNightMode) {
     this.runningTime += deltaTime;
     this.horizonLine.update(deltaTime, currentSpeed);
-    this.nightMode.update(showNightMode);
+    // this.nightMode.update(showNightMode);
     this.updateClouds(deltaTime, currentSpeed);
     if (updateObstacles) {
       this.updateObstacles(deltaTime, currentSpeed);
@@ -87,8 +86,7 @@ Horizon.prototype = {
       this.clouds = this.clouds.filter(function(obj) {
         return !obj.remove;
       });
-    }
-    else {
+    } else {
       this.addCloud();
     }
   },
@@ -118,8 +116,7 @@ Horizon.prototype = {
         this.addNewObstacle(currentSpeed);
         lastObstacle.followingObstacleCreated = true;
       }
-    }
-    else {
+    } else {
       // Create new obstacles.
       this.addNewObstacle(currentSpeed);
     }
@@ -170,7 +167,7 @@ Horizon.prototype = {
   reset: function() {
     this.obstacles = [];
     this.horizonLine.reset();
-    this.nightMode.reset();
+    // this.nightMode.reset();
   },
   /**
    * Update the canvas width and scaling.
@@ -189,4 +186,3 @@ Horizon.prototype = {
       this.dimensions.WIDTH));
   }
 };
-
