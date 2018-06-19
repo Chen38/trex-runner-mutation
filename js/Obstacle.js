@@ -49,6 +49,11 @@ Obstacle.MAX_OBSTACLE_LENGTH = 3,
       if (this.size > 1 && this.typeConfig.multipleSpeed > speed) {
         this.size = 1;
       }
+      if (this.typeConfig.type === 'PTERODACTYL') {
+        this.shouldShotTimes = 2;
+      } else {
+        this.shouldShotTimes = this.size;
+      }
       this.width = this.typeConfig.width * this.size;
       // Check if obstacle can be positioned at various heights.
       if (Array.isArray(this.typeConfig.yPos)) {

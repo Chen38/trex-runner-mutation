@@ -111,8 +111,7 @@ Horizon.prototype = {
       var lastObstacle = this.obstacles[this.obstacles.length - 1];
       if (lastObstacle && !lastObstacle.followingObstacleCreated &&
         lastObstacle.isVisible() &&
-        (lastObstacle.xPos + lastObstacle.width + lastObstacle.gap) <
-        this.dimensions.WIDTH) {
+        (lastObstacle.xPos + lastObstacle.width + lastObstacle.gap) < this.dimensions.WIDTH) {
         this.addNewObstacle(currentSpeed);
         lastObstacle.followingObstacleCreated = true;
       }
@@ -133,8 +132,7 @@ Horizon.prototype = {
     var obstacleType = Obstacle.types[obstacleTypeIndex];
     // Check for multiples of the same type of obstacle.
     // Also check obstacle is available at current speed.
-    if (this.duplicateObstacleCheck(obstacleType.type) ||
-      currentSpeed < obstacleType.minSpeed) {
+    if (this.duplicateObstacleCheck(obstacleType.type) || currentSpeed < obstacleType.minSpeed) {
       this.addNewObstacle(currentSpeed);
     } else {
       var obstacleSpritePos = this.spritePos[obstacleType.type];

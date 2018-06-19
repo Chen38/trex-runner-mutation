@@ -544,8 +544,13 @@ Runner.prototype = {
 
       var bulletCollsion = hasBullets && hasObstacles && checkBulletCollision(this.horizon.obstacles[0], this.tRex.bullets[0]);
 
-      if (bulletCollsion) {
+      if (bulletCollsion && hasObstacles && this.horizon.obstacles[0].shouldShotTimes === 1) {
         this.cleanBulletAndObstacle();
+      }
+
+      if (bulletCollsion && hasObstacles && this.horizon.obstacles[0] && this.horizon.obstacles[0].shouldShotTimes > 1) {
+        this.horizon.obstacles[0].shouldShotTimes--;
+        this.cleanBullet();
       }
 
       if (!collision) {
@@ -780,6 +785,17 @@ Runner.prototype = {
     // Clean the first obstacle
     obstacles.shift();
     this.horizon.obstacles = obstacles;
+  },
+  /**
+   * When shoot the multi obstacle
+   * Need to clean the bullet
+   */
+  cleanBullet: function() {
+    var bullets = this.tRex.bullets.slice(0);
+
+    // Remove the first bullet
+    bullets.shift();
+    this.tRex.bullets = bullets;
   },
   /**
    * Game over state.

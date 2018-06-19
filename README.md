@@ -26,6 +26,8 @@ Or you can play it [online][1] now.
 - Basic is same(remove the night mode)
 - Run 100 distance get one bullet
 - Multiple trees' obstacle needs multiple bullets
+  - Cactus (based on the size, need 1/2/3 bullet(s))
+  - Pterodactyl (need 2 bullets)
 - Bullets amounts show below the current score
 
 And don't forget to type `s` to shoot!
