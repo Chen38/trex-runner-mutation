@@ -583,7 +583,7 @@ Runner.prototype = {
         }
       }
 
-      this.tRex.updateBullets();
+      this.tRex.updateBulletAmounts();
 
       // Night mode.
       // if (this.invertTimer > this.config.INVERT_FADE_DURATION) {

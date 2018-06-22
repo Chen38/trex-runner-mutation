@@ -8,7 +8,6 @@ function Bullet(canvasCtx) {
   this.remove = false;
   this.xPos = 0;
   this.yPos = 0;
-  this.time = 0;
   this.config = Bullet.config;
   this.init();
 }

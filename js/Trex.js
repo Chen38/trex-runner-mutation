@@ -263,6 +263,7 @@ Trex.prototype = {
       this.bulletsAmounts--;
       this.addNewBullet(this.canvasCtx);
     }
+    // this.addNewBullet(this.canvasCtx);
   },
   /**
    * Add bullet objs.
@@ -274,7 +275,7 @@ Trex.prototype = {
   /**
    * Update bullets amount
    */
-  updateBullets: function() {
+  updateBulletAmounts: function() {
     this.bulletDigits = (this.defaultBulletAmountString + this.bulletsAmounts).substr(-this.config.MAX_BULLETS_UNITS).split('');
 
     for (var i = 0; i < this.config.MAX_BULLETS_UNITS; i++) {
@@ -361,7 +362,7 @@ Trex.prototype = {
     }
     // Back down at ground level. Jump completed.
     if (this.yPos > this.groundYPos) {
-      this.reset();
+      this.reset(true);
       this.jumpCount++;
     }
     this.update(deltaTime);
@@ -388,7 +389,7 @@ Trex.prototype = {
   /**
    * Reset the t-rex to running at start of game.
    */
-  reset: function() {
+  reset: function(isJumping) {
     this.yPos = this.groundYPos;
     this.jumpVelocity = 0;
     this.jumping = false;
@@ -397,6 +398,8 @@ Trex.prototype = {
     this.midair = false;
     this.speedDrop = false;
     this.jumpCount = 0;
-    this.bullets = [];
+    if (!isJumping) {
+      this.bullets = [];
+    }
   }
 };
